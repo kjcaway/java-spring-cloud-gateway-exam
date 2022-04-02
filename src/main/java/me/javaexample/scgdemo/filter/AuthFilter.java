@@ -1,5 +1,7 @@
 package me.javaexample.scgdemo.filter;
 
+import io.jsonwebtoken.Claims;
+import me.javaexample.scgdemo.jwt.JwtUtils;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFactory;
 import org.springframework.http.HttpStatus;
@@ -15,8 +17,11 @@ import java.util.Objects;
 @Component
 public class AuthFilter extends AbstractGatewayFilterFactory<AuthFilter.Config> {
 
-    public AuthFilter() {
+    private final JwtUtils jwtUtils;
+
+    public AuthFilter(JwtUtils jwtUtils) {
         super(Config.class);
+        this.jwtUtils = jwtUtils;
     }
 
     public static class Config {
@@ -40,7 +45,8 @@ public class AuthFilter extends AbstractGatewayFilterFactory<AuthFilter.Config> 
             String tokenString = Objects.requireNonNull(token).get(0);
 
             // 토큰 검증
-            if(!tokenString.equals("A.B.C")) {
+            Claims claims = jwtUtils.parseJwtToken(tokenString);
+            if(claims.isEmpty()) {
                 return handleUnAuthorized(exchange); // 토큰이 일치하지 않을 때
             }
 

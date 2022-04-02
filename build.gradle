@@ -27,6 +27,9 @@ dependencies {
 	/** JWT **/
 	implementation 'io.jsonwebtoken:jjwt:0.9.1'
 
+	/** JWT Token 발급시 필요 **/
+	implementation 'javax.xml.bind:jaxb-api:2.3.0-b170201.1204'
+
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 
