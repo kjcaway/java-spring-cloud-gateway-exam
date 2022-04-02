@@ -1,0 +1,15 @@
+POST http://localhost/java-demo/api/v1/member
+token: A.B.C
+Content-Type: application/json
+
+{
+    "name": "테스트",
+    "email" :"test.kaka@gmail.com"
+}
+
+###
+
+GET http://localhost/java-demo/api/v1/member
+token: A.B.C
+
+
