@@ -9,7 +9,8 @@ Content-Type: application/json
 
 ### get member list
 GET http://localhost/java-demo/api/v1/member
-token: Bearer {token}
+token: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJmcmVzaCIsImlhdCI6MTY0ODk2MDYyNywiZXhwIjoxNjQ4OTYwNjg3LCJpZCI6InRlc3QiLCJlbWFpbCI6InRlc3RAZ21haWwuY29tIn0.hCDHm0wM2ePWXenVS25WtoNy7tnL8LoHrICwbDwlx2k
 
 ### get jwt token
-POST http://localhost/auth/token
+GET http://localhost/auth/token
+Content-Type: application/json

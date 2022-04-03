@@ -1,11 +1,12 @@
 package me.javaexample.scgdemo.controller;
 
 import me.javaexample.scgdemo.jwt.JwtUtils;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Mono;
+
+import java.util.Map;
 
 @RestController
 @RequestMapping("/auth")
@@ -17,10 +18,13 @@ public class AuthController {
         this.jwtUtils = jwtUtils;
     }
 
-    @PostMapping("/token")
-    public Mono<ResponseEntity<?>> token() {
+    @GetMapping("/token")
+    public Mono<?> token() {
         String token = jwtUtils.makeJwtToken();
 
-        return Mono.just(ResponseEntity.ok(token));
+        return Mono.just(Map.of(
+                "status", "OK",
+                "data", token)
+        );
     }
 }
