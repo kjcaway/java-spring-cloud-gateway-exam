@@ -1,8 +1,8 @@
 package me.javaexample.scgdemo.route;
 
-import lombok.RequiredArgsConstructor;
 import me.javaexample.scgdemo.entity.RouteInfo;
 import me.javaexample.scgdemo.entity.RouteInfoRepository;
+import me.javaexample.scgdemo.filter.AuthFilter;
 import org.springframework.cloud.gateway.route.Route;
 import org.springframework.cloud.gateway.route.RouteLocator;
 import org.springframework.cloud.gateway.route.builder.Buildable;
@@ -15,10 +15,12 @@ public class DynamicRouteLocator implements RouteLocator {
 
     private final RouteLocatorBuilder builder;
     private final RouteInfoRepository routeInfoRepository;
+    private final AuthFilter authFilter;
 
-    public DynamicRouteLocator(RouteLocatorBuilder builder, RouteInfoRepository routeInfoRepository) {
+    public DynamicRouteLocator(RouteLocatorBuilder builder, RouteInfoRepository routeInfoRepository, AuthFilter authFilter) {
         this.builder = builder;
         this.routeInfoRepository = routeInfoRepository;
+        this.authFilter = authFilter;
     }
 
     @Override
@@ -34,7 +36,13 @@ public class DynamicRouteLocator implements RouteLocator {
     private Buildable<Route> setPredicateSpec(RouteInfo routeInfo, PredicateSpec predicateSpec) {
         return predicateSpec
                 .path("/" + routeInfo.getCode() + "/**")
-                .filters(f -> f.rewritePath("/" + routeInfo.getCode() + "/(?<segment>.*)", "/${segment}"))
+                .filters(f -> {
+                    if (routeInfo.getIsAuth() == 1) {
+                        f.filter(authFilter.apply(new AuthFilter.Config()));
+                    }
+                    f.rewritePath("/" + routeInfo.getCode() + "/(?<segment>.*)", "/${segment}");
+                    return f;
+                })
                 .uri(routeInfo.getProxyHost());
     }
 }
