@@ -1,5 +1,5 @@
 plugins {
-	id 'org.springframework.boot' version '2.6.6'
+	id 'org.springframework.boot' version '2.7.14'
 	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
 	id 'java'
 }
@@ -32,6 +32,10 @@ dependencies {
 
 	/** Health check **/
 	implementation 'org.springframework.boot:spring-boot-starter-actuator'
+
+	/** DB **/
+	implementation 'org.springframework.boot:spring-boot-starter-data-r2dbc'
+	implementation 'io.asyncer:r2dbc-mysql:0.9.3'
 
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
