@@ -20,3 +20,12 @@ spring:
                 baseMessage: SCG AuthFilter
                 preLogger: true
                 postLogger: true
+
+management:
+  endpoint:
+    gateway:
+      enabled:
+  endpoints:
+    web:
+      exposure:
+        include: gateway

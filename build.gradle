@@ -30,6 +30,9 @@ dependencies {
 	/** JWT Token 발급시 필요 **/
 	implementation 'javax.xml.bind:jaxb-api:2.3.0-b170201.1204'
 
+	/** Health check **/
+	implementation 'org.springframework.boot:spring-boot-starter-actuator'
+
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 
