@@ -1,11 +1,11 @@
 plugins {
-	id 'org.springframework.boot' version '2.7.14'
-	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+	id 'org.springframework.boot' version "${springBootVersion}"
+	id 'io.spring.dependency-management' version "${springDependencyManagementVersion}"
 	id 'java'
 }
 
-group = 'me.javaexample.scgdemo'
-version = '0.0.1-SNAPSHOT'
+group = projectGroup
+version = applicationVersion
 sourceCompatibility = '11'
 
 repositories {
@@ -13,7 +13,7 @@ repositories {
 }
 
 ext {
-	set('springCloudVersion', "2021.0.1")
+	set('springCloudVersion', springCloudDependenciesVersion)
 }
 
 dependencies {

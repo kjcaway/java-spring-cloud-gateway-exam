@@ -19,21 +19,14 @@ import reactor.core.publisher.Mono;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-;
 
 @Component
 @Order(-2)
 public class GlobalExceptionHandler extends AbstractErrorWebExceptionHandler {
 
-    private final ObjectProvider<ViewResolver> viewResolvers;
-    private final ServerCodecConfigurer serverCodecConfigurer;
 
-
-    public GlobalExceptionHandler(ObjectProvider<ViewResolver> viewResolvers, ServerCodecConfigurer serverCodecConfigurer,
-                                  ErrorAttributes errorAttributes, ApplicationContext applicationContext) {
+    public GlobalExceptionHandler(ObjectProvider<ViewResolver> viewResolvers, ServerCodecConfigurer serverCodecConfigurer, ErrorAttributes errorAttributes, ApplicationContext applicationContext) {
         super(errorAttributes, new WebProperties.Resources(), applicationContext);
-        this.viewResolvers = viewResolvers;
-        this.serverCodecConfigurer = serverCodecConfigurer;
         super.setMessageWriters(serverCodecConfigurer.getWriters());
         super.setMessageReaders(serverCodecConfigurer.getReaders());
         super.setViewResolvers(viewResolvers.orderedStream().collect(Collectors.toList()));
@@ -45,11 +38,13 @@ public class GlobalExceptionHandler extends AbstractErrorWebExceptionHandler {
     }
 
     private Mono<ServerResponse> renderErrorResponse(ServerRequest request) {
+        try {
+            final Map<String, Object> errorPropertiesMap = getErrorAttributes(request, ErrorAttributeOptions.defaults());
+            int httpStatus = (int) errorPropertiesMap.get("status");
+            return ServerResponse.status(httpStatus).contentType(MediaType.APPLICATION_JSON).body(BodyInserters.fromValue(errorPropertiesMap));
 
-        final Map<String, Object> errorPropertiesMap = getErrorAttributes(request, ErrorAttributeOptions.defaults());
-
-        return ServerResponse.status(HttpStatus.BAD_REQUEST)
-                .contentType(MediaType.APPLICATION_JSON)
-                .body(BodyInserters.fromValue(errorPropertiesMap));
+        } catch (Exception e) {
+            return ServerResponse.status(HttpStatus.INTERNAL_SERVER_ERROR).contentType(MediaType.TEXT_PLAIN).body(BodyInserters.fromValue(e.getMessage()));
+        }
     }
 }
